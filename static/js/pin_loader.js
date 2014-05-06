@@ -523,4 +523,4 @@ jQuery(function() {
     }
     $('#imageurl' + pin['index']).before('<div class="error_text">' + pin['error'] + '</div>');
   };
-});
+}).call(this);
