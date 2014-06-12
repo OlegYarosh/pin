@@ -17,10 +17,10 @@ $def with (photo, user, prev_photo=None, next_photo=None)
                 <div class="modal-image-container">
                     $if next_photo:
                         <a href="#" data-toggle="modal" data-dismiss="modal" data-target="#showPhotoModal$next_photo.id">
-                            <img src="$(photo.original_url)" />
+                            <img width="70%" src="$(photo.original_url)" />
                         </a>
                     $else:
-                        <img src="$photo.original_url" />
+                        <img width="70%" src="$photo.original_url" />
                 </div>
 
                 <div class="modal-image-next-btn">
@@ -30,8 +30,9 @@ $def with (photo, user, prev_photo=None, next_photo=None)
                         &nbsp;
                 </div>
                 $if 'logged_in' in sess and user.id == sess.user_id:
-                    <div class="modal-buttons">
+                <div class="modal-buttons">
                         <a href='#' id="upload_thumbnail" data-toggle="modal" data-target="#uploadImageModal" class='button small-pad'>Upload new picture</a>
+                        <a href='#' id="enlarge" class='button small-pad' onclick="container=\$(this).parent().parent().children('.modal-image-container'); console.log(container.find('img').attr('width', '100%'))">Enlarge</a>
                         $if not user.pic_obj or photo.id != user.pic_obj['id']:
                             <a href='/photo/$(photo.id)/default' class='button small-pad'>Set as profile picture</a>
 

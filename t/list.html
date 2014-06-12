@@ -10,6 +10,9 @@ $else:
     <div id='pin-box-wrapper' class='tab-pane fade active in'>
 
 <div class="greyLine">
+  $if len(pins):
+      $ profile = pins[0].user_username
+      <a href='/$(profile)#list-box-wrapper-link' class="link_with_loading button" onclick="window.location.hash='#list-box-wrapper-link';window.location.reload(true);"><b>Back</b></a>
 </div>
 
 $if user:

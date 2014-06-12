@@ -16,16 +16,20 @@ class Picture(Base, Serializer):
     album_id = Column(Integer, ForeignKey("albums.id"))
     original_url = Column(Text, default='')
     resized_url = Column(Text, default='')
+    enlarged_url = Column(Text, default='')
     likes = relationship("PictureLike")
     comments = relationship("PictureComment")
 
-    def __init__(self, album_id, original_url, resized_url):
+    def __init__(self, album_id, original_url,
+                 resized_url, enlarged_url):
         self.album_id = album_id
         self.original_url = original_url
         self.resized_url = resized_url
+        self.enlarged_url = enlarged_url
+
 
     def __repr__(self):
-       return "<Picture('%s', '%s', '%s')>" % (self.original_url, self.resized_url, self.album_id)
+       return "<Picture('%s', '%s', '%s, %s')>" % (self.original_url, self.resized_url, self.album_id, self.enlarged_url)
 
 
 metadata = Base.metadata

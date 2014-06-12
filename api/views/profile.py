@@ -757,6 +757,7 @@ class PicUpload(BaseAPI):
                                 error_code="Required args are missing")
 
         album = self._get_or_create_album(user['id'], 'photos')
+
         photo = self._save_in_database(file_obj, 160, album.id)
 
         user_to_update = web.ctx.orm.query(User)\
@@ -792,15 +793,17 @@ class PicUpload(BaseAPI):
 
     def _save_in_database(self, file_obj, resized_size, album_id):
         file_path = self._save_file(file_obj)
+        enlarged = Image.open(file_path).size[0] * 0.3
+
         images_dict = store_image_from_filename(db,
                                                 file_path,
-                                                widths=[resized_size])
-
+                                                widths=[resized_size, enlarged])
         picture = Picture(
-            album_id,
-            images_dict[0]['url'],
-            images_dict.get(resized_size, images_dict[0])\
-                .get('url', None)
+            album_id=album_id,
+            original_url=images_dict[0]['url'],
+            resized_url=images_dict.get(resized_size, images_dict[0])\
+                .get('url', None),
+            enlarged_url=images_dict.get(resized_size, images_dict[enlarged]).get('url', None)
         )
 
         web.ctx.orm.add(picture)
@@ -846,7 +849,7 @@ class PicUpload(BaseAPI):
 class BgUpload(PicUpload):
     """
     Upload profile background and save it in database
-    
+
     :link: /api/profile/userinfo/upload_bg
     """
     def POST(self):
@@ -874,7 +877,7 @@ class BgUpload(PicUpload):
         csid_from_client = request_data.get("csid_from_client")
 
         file_obj = request_data.get('file')
-        
+
         # For some reason, FileStorage object treats itself as False
         if type(file_obj) == dict:
             return api_response(data={}, status=405,
@@ -906,7 +909,7 @@ class BgUpload(PicUpload):
 class GetPictures(BaseAPI):
     """
     API method for get photos of user
-    
+
     :link: /api/profile/userinfo/get_pictures
     """
     def POST(self):
@@ -967,7 +970,7 @@ class GetPictures(BaseAPI):
                             break
                 else:
                     picture['liked'] = False
-                
+
                 data['photos'].append(picture)
 
         response = api_response(data=data,
@@ -981,7 +984,7 @@ class GetPictures(BaseAPI):
 class PictureRemove(BaseAPI):
     """
     Remove picture and save changes in database
-    
+
     :link: /api/profile/userinfo/remove_pic
     """
     def POST(self):
