@@ -988,7 +988,9 @@ class PageProfile2:
         """
         Returns user profile information by username
         """
-        # force_login(sess)
+        if 'favicon' in username:
+            return
+        force_login(sess)
         logintoken = convert_to_logintoken(sess.user_id)
         data = {"csid_from_client": ""}
 
@@ -2417,6 +2419,7 @@ class PageSearchPeople:
         }
 
         data = api_request("api/search/people", "POST", data)
+        users = []
         if data['status'] == 200:
             users = data['data']['users']
 
