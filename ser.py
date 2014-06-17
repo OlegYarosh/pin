@@ -169,6 +169,7 @@ urls = (
     '/pwreset/(\d*)/(\d*)/(.*)/', 'mypinnings.recover_password.PasswordReset',
     '/recover_password_complete/', 'mypinnings.recover_password.RecoverPasswordComplete',
     '/getuserpins/(.*?)', 'GetUserPins',
+    '/favicon.ico', 'PageFavicon',
     '/(.*?)/list/(.*?)', 'PageList',
     '/(.*?)', 'PageProfile2',
     '/(.*?)/(.*?)', 'PageConnect2',
@@ -398,6 +399,11 @@ class PageCheckPassword:
     def GET(self):
         p = web.input(p='').p
         return pw_hash(p)
+
+
+class PageFavicon:
+    def GET(self):
+        pass
 
 
 class PageCheckEmail:
@@ -988,8 +994,6 @@ class PageProfile2:
         """
         Returns user profile information by username
         """
-        if 'favicon' in username:
-            return
         force_login(sess)
         logintoken = convert_to_logintoken(sess.user_id)
         data = {"csid_from_client": ""}
